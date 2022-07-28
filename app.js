@@ -12,7 +12,7 @@ var brandRouter = require('./routes/brandRoute')
 var categoryRouter = require('./routes/categoryRoute')
 var users = require('./routes/users')
 var reports = require('./routes/reportRoute')
-
+var errorHandler = require('./middlewares/errors')
 
 var cors = require("cors")
 
@@ -42,5 +42,9 @@ app.use('/api/brand', brandRouter)
 app.use('/api/user', users)
 app.use('/api/report', reports)
 
-// app.listen(5000)
+//error handler midellwar  
+app.use(errorHandler)
+
+
+app.listen(5000)
 module.exports = app;
