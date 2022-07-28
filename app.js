@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
+// Put this statement near the top of your module
+var bodyParser = require('body-parser');
 var adminRouter = require('./routes/adminRoute');
 var colorRouter = require('./routes/colorRoute')
 var brandRouter = require('./routes/brandRoute')
@@ -15,7 +17,9 @@ var reports = require('./routes/reportRoute')
 var cors = require("cors")
 
 var app = express();
-
+// Put these statements before you define any routes.
+app.use(express.urlencoded({extended: true}));
+app.use(express.json()) //
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
