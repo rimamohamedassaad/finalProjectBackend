@@ -51,79 +51,79 @@ class Controller {
   //add new user 
   register = async (req, res, next) => {
     const { username, email, password } = req.body;
-    try {
-      const user = await User.create({
-        username, email, password
-      })
-      jwt.sign(
-        { id: this._id },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: 3600 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({
-            success: true,
-            token,
-          });
-        }
-      )
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        error: error.message,
-      })
+
+    if (!username || !email || !password) {
+      res.status(400).json({ msg: 'Please enter all fields' });
     }
+
+    User.findOne({ email })
+      .then(user => {
+        if (user) return res.status(400).json({ msg: 'user already exists' });
+        const newuser = new User({ username, email, password });
+
+        // Create salt and hash
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(password, salt, (err, hash) => {
+            // if(err) throw err;
+            newuser.password = hash;
+            newuser.save()
+              .then(user => {
+                jwt.sign(
+                  { id: user._id },
+                  process.env.JWT_SECRET_KEY,
+                  { expiresIn: 3600 },
+                  (err, token) => {
+                    if (err) throw err;
+                    res.json({
+                      token,
+                      user: {
+                        id: user._id,
+                        username: user.username,
+                        email: user.email
+                      }
+                    });
+                  }
+                )
+              });
+          })
+        })
+      })
   }
-  login = async (req, res, next) => {
+  login = async (req,res) => {
     const { email, password } = req.body;
-    if (!email || !password) {
-      next(new ErrorResponse("please provide email and password"))
+    if(!email || !password){
+        res.status(400).json({msg: 'Please enter all fields'});
     }
-    try {
-      const user = await User.findOne({ email }).select("+password");
-      if (!user) {
-        return next(new ErrorResponse("invalide cridentials"))
-      }
-      const isMatch = await user.matchPassword(password)
-      if (!isMatch) {
-        return next(new ErrorResponse("incorrect password"))
-      }
-      jwt.sign(
-        { id: this._id },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: 3600 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({
-            success: true,
-            token,
-          });
-        }
-      )
-    } catch (error) {
+    User.findOne({email}).select("+password")
+        .then(user => {
+            if(!user) return res.status(400).json({msg: 'user does not exist'});
 
-      next(error)
-    }
+            // Validate password
+            bcrypt.compare(password, user.password)
+                .then(isMatch => {
+                  console.log(user.password)
+                  console.log("pass",password)
+                    if(!isMatch) return res.status(400).json({ msg: 'Invalid credentials'});
 
-  }
-  forgotPassword = async (req, res, next) => {
-    const { email } = request.body;
-    try {
-      const user = User.findOne({ email });
-
-      if (!user) {
-        return next(new ErrorResponse("email could not be found", 404))
-      }
-      const resetToken = user.getResetPassword();
-
-      await user.save();
-      const resetUrl = `http://localhost:3000/passwordReset/${resetToken}`;
-      
-    } catch (error) {
-
-    }
-  }
-
+                    jwt.sign(
+                        { id: user._id },
+                        process.env.JWT_SECRET_KEY,
+                        { expiresIn: 3600 },
+                        (err, token) => {
+                            if(err) throw err;
+                            res.json({
+                                token,
+                                user: {
+                                    id: user._id,
+                                    name: user.name,
+                                    email: user.email
+                                }
+                            });
+                        }
+                    )
+                })
+        })
+}
 
 }
 

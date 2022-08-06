@@ -42,21 +42,21 @@ class Controller {
   async addNewPhone(req, res, next) {
     const reqFiles = [];
     const url = req.protocol + "://" + req.get("host");
-    for (var i = 0; i < req.files.length; i++) {
+    for (let i = 0; i < req.files.length; i++) {
       reqFiles.push(url + "/images/" + req.files[i].filename);
     }
     let newReport = await new Report({
-      code: req.body.code,
+      user: req.body.user,
+      reportDate:req.body.reportDate,
+      color: req.body.color,
       brand: req.body.brand,
       category: req.body.category,
-      color: req.body.color,
-      user: req.body.user,
-      description: req.body.description,
       linetype: req.body.linetype,
+      securitycode: req.body.securitycode,
       serialnumber: req.body.serialnumber,
       ownerphonenumber: req.body.ownerphonenumber,
       stolenphonenumber: req.body.stolenphonenumber,
-      image: reqFiles,
+      description: req.body.description,
     });
     newReport.save({}, (error, response) => {
       if (error) return next(error);

@@ -1,29 +1,13 @@
 const { Schema, model } = require('mongoose');
 
 const ReportSchema = new Schema({
-    code: {
-        type: String,
-        required: true,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
     },
-    description: {
+    reportDate: {
         type: String,
-        required: true,
-    },
-    linetype: {
-        type: String,
-        required: true,
-    },
-    serialnumber: {
-        type: String,
-        required: true,
-    },
-    ownerphonenumber: {
-        type: String,
-        required: true,
-    },
-    stolenphonenumber: {
-        type: String,
-        required: true,
+        ref: "User"
     },
     color: {
         type: Schema.Types.ObjectId,
@@ -37,14 +21,34 @@ const ReportSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Category"
     },
-    image:{
-        type:Array,
-        required:true,
-        },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: "User"
+    linetype: {
+        type: String,
+        required: true,
     },
+    securitycode: {
+        type: String,
+        required: true,
+    },
+    serialnumber: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    ownerphonenumber: {
+        type: String,
+        required: true,
+    },
+    stolenphonenumber: {
+        type: String,
+        required: true,
+    },
+    // reportimage: {
+    //     type: Array,
+    //     required: true,
+    // },
 })
 const Report = model('Report', ReportSchema);
 module.exports = Report;

@@ -13,10 +13,9 @@ var categoryRouter = require('./routes/categoryRoute')
 var users = require('./routes/users')
 var reports = require('./routes/reportRoute')
 var errorHandler = require('./middlewares/errors')
-
 var cors = require("cors")
-
 var app = express();
+app.use(cors())
 // Put these statements before you define any routes.
 app.use(express.urlencoded({extended: true}));
 app.use(express.json()) //
@@ -25,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 //connetion to the dataBase
 
 mongoose.connect(process.env.DBCONNECTION, {
@@ -35,7 +35,7 @@ mongoose.connect(process.env.DBCONNECTION, {
     console.log("successfully connected");
 }).catch(console.error);
 
-app.use('/api/Admin', adminRouter)
+app.use('/api/admin', adminRouter)
 app.use('/api/color', colorRouter)
 app.use('/api/category', categoryRouter)
 app.use('/api/brand', brandRouter)
