@@ -1,13 +1,13 @@
 const { Schema, model } = require('mongoose');
 
 const ReportSchema = new Schema({
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: "User"
+    ownerName: {
+        type: String,
+        required: true,
     },
     reportDate: {
         type: String,
-        ref: "User"
+        required: true,
     },
     color: {
         type: Schema.Types.ObjectId,
@@ -45,10 +45,10 @@ const ReportSchema = new Schema({
         type: String,
         required: true,
     },
-    // reportimage: {
-    //     type: Array,
-    //     required: true,
-    // },
+    reportimage: {
+        type: Array,
+        required: true,
+    },
 })
 const Report = model('Report', ReportSchema);
 module.exports = Report;

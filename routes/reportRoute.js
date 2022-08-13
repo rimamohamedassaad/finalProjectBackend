@@ -35,12 +35,16 @@ var multer = require("multer");
 
 //get all the reports
 router.get('/', reportscontroller.getAllReports)
+router.get("/color/:id", reportscontroller.getByColor);
+router.get("/category/:id", reportscontroller.getByCategory);
+router.get("/brand/:id", reportscontroller.getByBrand);
+
 
 //get an reports by id
 router.get('/:id', reportscontroller.get)
 
  // Add new reports
- router.post("/", upload.array("image", 6),reportscontroller.addNewPhone);
+ router.post("/", upload.array("reportimage", 6),reportscontroller.addNewPhone);
 //update an reports by _id
 router.put('/:id', reportscontroller.put)
 

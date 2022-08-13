@@ -1,10 +1,11 @@
 const Report = require('../Models/reportsSchema')
+const Color = require('../Models/colorSchema')
 
 class Controller {
   //get All the Reports
 
   getAllReports(req, res, next) {
-    Report.find().populate("color").populate("brand").populate("category").populate("user").exec(function (err, response) {
+    Report.find().populate("color").populate("brand").populate("category").exec(function (err, response) {
       if (err) return next(err)
       res.status(200).send({ success: true, response });
     });
@@ -17,6 +18,15 @@ class Controller {
       res.status(200).send({ success: true, response });
     });
   }
+  //filter by color 
+  filterBycolor(req, res, next) {
+    let { color } = req.params;
+    Report.find({ color: color }, (err, response) => {
+      if (err) return next(err);
+      res.status(200).send({ success: true, response });
+    });
+  }
+
   //Add an Report
   post(req, res, next) {
     // let body = req.body;
@@ -46,8 +56,8 @@ class Controller {
       reqFiles.push(url + "/images/" + req.files[i].filename);
     }
     let newReport = await new Report({
-      user: req.body.user,
-      reportDate:req.body.reportDate,
+      ownerName: req.body.ownerName,
+      reportDate: req.body.reportDate,
       color: req.body.color,
       brand: req.body.brand,
       category: req.body.category,
@@ -57,6 +67,8 @@ class Controller {
       ownerphonenumber: req.body.ownerphonenumber,
       stolenphonenumber: req.body.stolenphonenumber,
       description: req.body.description,
+      reportimage: req.files
+
     });
     newReport.save({}, (error, response) => {
       if (error) return next(error);
@@ -72,6 +84,27 @@ class Controller {
       if (err) return next(err);
       res.status(200).send({ success: true, response });
     })
+  }
+  getByColor(req, res, next) {
+    let { id } = req.params;
+    Report.find({ color: id }, (err, response) => {
+      if (err) return next(err);
+      res.status(200).send({ success: true, response });
+    });
+  }
+  getByCategory(req, res, next) {
+    let { id } = req.params;
+    Report.find({ category: id }, (err, response) => {
+      if (err) return next(err);
+      res.status(200).send({ success: true, response });
+    });
+  }
+  getByBrand(req, res, next) {
+    let { id } = req.params;
+    Report.find({ brand: id }, (err, response) => {
+      if (err) return next(err);
+      res.status(200).send({ success: true, response });
+    });
   }
 }
 
