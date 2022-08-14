@@ -38,7 +38,8 @@ router.get('/', reportscontroller.getAllReports)
 router.get("/color/:id", reportscontroller.getByColor);
 router.get("/category/:id", reportscontroller.getByCategory);
 router.get("/brand/:id", reportscontroller.getByBrand);
-
+router.get("/user/:id", reportscontroller.getUserReports);
+router.get("/latest", reportscontroller.getLastfiveRepo);
 
 //get an reports by id
 router.get('/:id', reportscontroller.get)

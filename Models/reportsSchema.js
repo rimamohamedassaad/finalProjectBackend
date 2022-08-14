@@ -10,16 +10,16 @@ const ReportSchema = new Schema({
         required: true,
     },
     color: {
-        type: Schema.Types.ObjectId,
-        ref: "Color"
+        type: String,
+        required: true,
     },
     brand: {
-        type: Schema.Types.ObjectId,
-        ref: "Brand"
+        type: String,
+        required: true,
     },
     category: {
-        type: Schema.Types.ObjectId,
-        ref: "Category"
+        type: String,
+        required: true,
     },
     linetype: {
         type: String,
@@ -48,6 +48,10 @@ const ReportSchema = new Schema({
     reportimage: {
         type: Array,
         required: true,
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
     },
 })
 const Report = model('Report', ReportSchema);

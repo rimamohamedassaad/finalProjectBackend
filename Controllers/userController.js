@@ -50,17 +50,17 @@ class Controller {
 
   //add new user 
   register = async (req, res, next) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, phonenumber, address } = req.body;
 
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !phonenumber || !address) {
       res.status(400).json({ msg: 'Please enter all fields' });
     }
 
     User.findOne({ email })
       .then(user => {
         if (user) return res.status(400).json({ msg: 'user already exists' });
-        const newuser = new User({ username, email, password });
-  
+        const newuser = new User({ username, email, password, phonenumber, address });
+
         // Create salt and hash
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(password, salt, (err, hash) => {
@@ -79,7 +79,9 @@ class Controller {
                       user: {
                         id: user._id,
                         username: user.username,
-                        email: user.email
+                        email: user.email,
+                        phonenumber: user.phonenumber,
+                        address: user.address
                       }
                     });
                   }

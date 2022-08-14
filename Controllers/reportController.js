@@ -5,11 +5,35 @@ class Controller {
   //get All the Reports
 
   getAllReports(req, res, next) {
-    Report.find().populate("color").populate("brand").populate("category").exec(function (err, response) {
+    Report.find((err, response) => {
+      if (err) return next(err);
+      res.status(200).send({ success: true, response });
+    })
+  }
+  getAllReports(req, res, next) {
+    Report.find((err, response) => {
       if (err) return next(err)
       res.status(200).send({ success: true, response });
     });
   }
+  getLastfiveRepo(req, res, next) {
+    Report.find().sort({ _id: -1 }).limit(5).exec((err, response) => {
+      if (err) return next(err)
+      res.status(200).send({ success: true, response })
+ })
+
+  }
+
+  getUserReports(req, res) {
+    let id = req.params.id;
+    Report.find({ user: id }, function (err, response) {
+      if (err) {
+        res.send(err);
+      }
+      res.status(200).json(response);
+    });
+  }
+
   //get Report by ID
   get(req, res, next) {
     let { id } = req.params;
@@ -48,7 +72,6 @@ class Controller {
       res.status(200).send({ success: true, response });
     });
   }
-
   async addNewPhone(req, res, next) {
     const reqFiles = [];
     const url = req.protocol + "://" + req.get("host");
@@ -67,8 +90,8 @@ class Controller {
       ownerphonenumber: req.body.ownerphonenumber,
       stolenphonenumber: req.body.stolenphonenumber,
       description: req.body.description,
-      reportimage: req.files
-
+      reportimage: req.files,
+      user: req.body.user
     });
     newReport.save({}, (error, response) => {
       if (error) return next(error);

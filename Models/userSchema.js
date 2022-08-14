@@ -8,6 +8,14 @@ const userSchema = new Schema({
         type: String,
         required: [true, "please provide a user name"]
     },
+    phonenumber:{
+        type: String,
+        required: [true, "please provide your phone number"]
+    },
+    address:{
+        type: String,
+        required: [true, "please provide your address"]
+    },
     email: {
         type: String,
         required: [true, "please provide an email"],
@@ -19,6 +27,9 @@ const userSchema = new Schema({
         minlenght: 6,
         select: false
     },
+    user:{
+        
+    }
    
 });
 
